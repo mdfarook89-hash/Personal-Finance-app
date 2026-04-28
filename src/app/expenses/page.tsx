@@ -10,6 +10,7 @@ interface Category {
   id: string;
   name: string;
   color: string;
+  createdAt: Date;
 }
 
 export default function ExpensesPage() {

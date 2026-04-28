@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-interface Category { id: string; name: string }
+interface Category { id: string; name: string; color: string; createdAt: Date }
 interface Budget { id: string; amount: number; month: number; year: number; category?: Category }
 
 export default function BudgetPage() {
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [amount, setAmount] = useState('');
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [month, setMonth] = useState<string | null>((new Date().getMonth() + 1).toString());
   const [year, setYear] = useState(new Date().getFullYear());
   const [categoryId, setCategoryId] = useState('');
 
@@ -25,7 +25,7 @@ export default function BudgetPage() {
     await fetch('/api/budget', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: parseFloat(amount), month, year, categoryId: categoryId || undefined }),
+      body: JSON.stringify({ amount: parseFloat(amount), month: month ? parseInt(month) : new Date().getMonth() + 1, year, categoryId: categoryId || undefined }),
     });
     setAmount('');
     load();
@@ -38,7 +38,7 @@ export default function BudgetPage() {
         <h2 className="font-semibold">Set Budget</h2>
         <div className="flex gap-2">
           <Input type="number" placeholder="Amount" value={amount} onChange={e => setAmount(e.target.value)} />
-          <Select value={month.toString()} onValueChange={v => setMonth(parseInt(v))}>
+          <Select value={month ?? ""} onValueChange={(v) => setMonth(v ?? "")}>
             <SelectTrigger className="w-[120px]"><SelectValue placeholder="Month" /></SelectTrigger>
             <SelectContent>
               {Array.from({ length: 12 }, (_, i) => (

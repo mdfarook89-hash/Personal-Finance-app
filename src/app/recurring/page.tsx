@@ -13,7 +13,7 @@ export default function RecurringPage() {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [day, setDay] = useState('1');
-  const [categoryId, setCategoryId] = useState('');
+  const [categoryId, setCategoryId] = useState<string | null>('');
 
   const load = () => {
     fetch('/api/recurring').then(r => r.json()).then(setRecs);
